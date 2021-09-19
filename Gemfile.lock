@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    yml_record (0.1.1)
+    yml_record (0.1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -31,4 +31,4 @@ DEPENDENCIES
   yml_record!
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
