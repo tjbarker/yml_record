@@ -1,4 +1,3 @@
-require 'ostruct'
 require 'yaml'
 require 'yml_record/helpers/delegate_missing_to.rb'
 require 'yml_record/relation.rb'
