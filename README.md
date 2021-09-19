@@ -1,6 +1,6 @@
 # YmlRecord
 
-YmlRecord is a gem to allow easy instanciating of classes from a yml file and exposing an ActiveRecord-esque api.
+YmlRecord is a gem to allow easy instantiating of classes from a yml file and exposing an ActiveRecord-esque api.
 
 ## Installation
 
