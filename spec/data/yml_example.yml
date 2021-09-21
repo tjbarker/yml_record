@@ -1,18 +1,24 @@
 - :id: 10
   :name: Bastien
   :job: big_boss
+  :right_handed: true
 - :id: 20
   :name: Dan
   :job: boss
+  :right_handed: true
 - :id: 30
   :name: Chen
   :job: dev
+  :right_handed: true
 - :id: 40
   :name: Bibek
   :job: dev
+  :right_handed: true
 - :id: 50
   :name: Jason
   :job: dev
+  :right_handed: true
 - :id: 60
   :name: Tom
   :job: ~
+  :right_handed: false

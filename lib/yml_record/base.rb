@@ -29,9 +29,7 @@ module YmlRecord
       protected
 
       def boolean_columns(*keys)
-        keys.each do |key|
-          define_method("#{key}?") { send(key) }
-        end
+        raise NotImplementedError, 'this method is no longer necessary, data with a boolean value automatically generates a `?` getter'
       end
 
       private
