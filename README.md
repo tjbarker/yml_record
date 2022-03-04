@@ -29,7 +29,7 @@ Create an ApplicationYmlRecord model that inherits from YmlRecord::Base
 Create a model that will be backed by a yml data file and inherit from ApplicationYmlRecord.
 ```
   # app/models/example_model.rb
-  class ExampleModel < YamlRecord::Base; end
+  class ExampleModel < ApplicationYmlRecord
 ```
 
 Add a yml file (named the same as your model) to the `config/data/` folder
