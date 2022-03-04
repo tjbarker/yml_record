@@ -2,6 +2,7 @@ class YmlExample < YmlRecord::Base
   self.filepath = 'spec/data/yml_example.yml'
 
   enum :job
+  enum :name, singular: true
 
   scope :bosses, -> { where(job: %w[boss big_boss]) }
   scope :bastien, -> { where(name: 'Bastien') }
@@ -99,6 +100,15 @@ RSpec.describe YmlExample, type: :model do
 
   describe 'enum' do
     describe 'scopes' do
+      context 'when calling singular getter' do
+        subject { YmlExample.Bastien } 
+
+        it 'returns an instance' do
+          is_expected.to eq YmlExample.new(id: 10)
+        end
+      end
+
+
       context 'when calling scope that has one instance' do
         subject { YmlExample.boss }
 
