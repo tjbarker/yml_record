@@ -16,7 +16,11 @@ module YmlRecord
       end
 
       def filepath
-        @filepath ||= "config/data/#{filename}.yml"
+        @filepath ||= 'config/data'
+      end
+
+      def filelocation
+        @filelocation ||= "#{filepath}/#{filename}.yml"
       end
     end
   end
