@@ -51,8 +51,63 @@ ExampleModel.find(1) #=> first instance of ExampleModel
 etc
 ```
 
-See below for specific functionality implementations.
+The automatic folder location for the yml files is `config/data/` but this can be manually overwritten
+The automatic file name for each model is the demodulized snakecase class name (e.g `App::ExampleClass` => `example_class.yml`)
 
+This automatic functionality can be overwritten when needed
+```
+  # to overwrite individual class's data filename to `bar.yml`
+  class Foo < ApplicationYmlRecord
+    self.filename = 'bar'
+  end
+
+  # to overwrite data folder location
+  class ApplicationYmlRecord < YamlRecord::Base
+    self.filepath = 'another/folder'
+  end
+```
+will look for data in `another/folder/bar/yml`
+
+See below for specific functionality implementations.
+The implementation examples assume the following setup
+```
+# example.yaml
+- id: 1
+  old: true
+  colour: :green
+- id: 2
+  colour: :red
+  old: true
+- id: 3
+  colour: :red
+  old: false
+
+class Example < YamlRecord::Base
+end
+```
+
+### Class methods
+#### Scopes
+Scopes will return a chainable relation with instances that match the attributes similar to active record relations
+```
+Example.where(old: true).where(colour: :red) #=> [<Example id: 1 />]
+is the same as 
+Example.where(old: true, colour: :red)
+```
+
+#### Has Many
+Will add method to return the child relation 
+
+### Instance methods
+#### Boolean methods
+
+When an attribute is a boolean a boolean instance method is automatically created.
+```
+Example.find(1).old? #=> true
+Example.find(2).old? #=> false
+```
+
+### TODO documentation
 TODO: document implementation of custom filename  
 TODO: document implementation of custom identifier  
 TODO: document implementation of scope  
@@ -64,7 +119,6 @@ TODO: document
 - [ ] default boolean methods. Currently need to specifically set up boolean methods.  
 - [ ] setting data folder in initializer for gem
 - [ ] allow setting of specific data for specific deployments
-
 
 
 ## Development
