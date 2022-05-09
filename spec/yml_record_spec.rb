@@ -226,3 +226,32 @@ RSpec.describe 'yaml model memory usage', type: :model do
   end
 end
 
+RSpec.describe 'relationships' do
+  describe 'belongs_to' do
+    class Child
+      attr_reader :yml_example_id
+
+      YmlRecord.relationships.belongs_to :yml_example
+    end
+
+    let(:child) { Child.new(yml_example_id) }
+
+    context 'when id not given' do
+      let(:yml_example_id) { nil }
+
+      it 'assigns a relationship' do
+        expect(child.yml_record).to eq nil
+      end
+    end
+
+    context 'when id given' do
+      let(:yml_example_id) { YmlExample.first.id }
+
+      it 'assigns a relationship' do
+        expect(child.yml_record).to eq YmlExample.first
+      end
+    end
+
+  end
+end
+
