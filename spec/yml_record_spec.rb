@@ -201,6 +201,24 @@ RSpec.describe YmlExample, type: :model do
       it { expect { subject }.to raise_error(NoMethodError) }
     end
   end
+
+  describe '.abstract_class' do
+    # class with no corresponding yml file
+    class AbstractClass < YmlRecord::Base
+      self.abstract_class = true
+    end
+
+    class Inheritor < AbstractClass
+      self.filepath = 'spec/data/yml_example.yml'
+    end
+
+    it 'registers abstract_class and does not require yml file, does not require inheritor to reset abstract class' do
+      expect(AbstractClass.first).to eq nil
+      expect(AbstractClass.abstract_class).to eq true
+      expect(Inheritor.last.id).to eq YmlExample.last.id
+      expect(Inheritor.abstract_class).to eq nil
+    end
+  end
 end
 
 RSpec.describe 'yaml model memory usage', type: :model do
