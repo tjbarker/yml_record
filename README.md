@@ -95,8 +95,49 @@ is the same as
 Example.where(old: true, colour: :red)
 ```
 
+### Relating to YamlRecord classes
+Other classes can relate to yaml record classes using an active record style integration
 #### Has Many
-Will add method to return the child relation 
+When storing primary keys of yaml records on another class, the belongs_to method can be used to create a parent like relationship.
+If the other class is dynamic (e.g: backed by a database) then the relationship can be set to dynamic (default).
+Otherwise (e.g: that class is also a yaml record) the relationship can be set to being not dynamic.
+```
+class Child
+  attr_accessor :example_id
+
+  YmlRecord.relationships.belongs_to self, :example
+end
+```
+This will add `Child#example` and `Child.example=(other_example)` instance methods.  
+
+The following will mark this relationship as static (not dynamic), which will not create the setter method (`Child.example=(other_example)`)
+```
+YmlRecord.relationships.belongs_to self, :example, dynamic: false
+```
+
+The following keys can all be manually set in the same way as with active record belongs to:  
+- foreign_key
+- primary_key
+- class_name
+
+If using active record to relate to yaml records, the following can be added to the application record to streamline implementation
+
+```
+class Car < ApplicationYmlRecord; end
+
+class ApplicationRecord < ActiveRecord::Base
+  def self.belongs_to(name, scope = nil, yml_relationship: false, **opts, &block)
+    return super(name, scope, **opts, &block)
+
+    YmlRecord.relationships.belongs_to self, name, scope, **opts, &block
+  end
+end
+
+# has db column of car_id (of type corresponding to car primary key)
+class Driver < ApplicationRecord
+  belongs_to :car, yml_relationship: true
+end
+```
 
 ### Instance methods
 #### Boolean methods
@@ -116,7 +157,6 @@ TODO: document implementation of enum
 ## Future implementations
 TODO: document
 
-- [ ] default boolean methods. Currently need to specifically set up boolean methods.  
 - [ ] setting data folder in initializer for gem
 - [ ] allow setting of specific data for specific deployments
 

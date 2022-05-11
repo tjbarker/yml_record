@@ -238,6 +238,7 @@ RSpec.describe 'relationships' do
 
       YmlRecord.relationships.belongs_to self, :yml_example
       YmlRecord.relationships.belongs_to self, :foobar, class_name: 'YmlExample'
+      YmlRecord.relationships.belongs_to self, :skuttlebutt, class_name: 'YmlExample', dynamic: false, foreign_key: :foobar_id
     end
 
     context 'with default implementation' do
@@ -279,6 +280,19 @@ RSpec.describe 'relationships' do
 
         it 'assigns a relationship' do
           expect(child.foobar).to eq YmlExample.first
+        end
+      end
+    end
+
+    context 'when static class' do
+      let(:child) { Child.new(skuttlebutt_id) }
+
+      context 'when id given' do
+        let(:skuttlebutt_id) { YmlExample.first.id }
+
+        it 'assigns a relationship and does not define setter' do
+          expect(child.skuttlebutt).to eq YmlExample.first
+          expect(child).to_not respond_to :skuttlebutt=
         end
       end
     end
