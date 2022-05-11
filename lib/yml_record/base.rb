@@ -11,10 +11,11 @@ require 'yml_record/builders/has_attributes.rb'
 module YmlRecord
   class Base
     extend DelegateMissingTo
-
     include Builders::HasAttributes
 
     class << self
+      attr_reader :abstract_class
+
       extend DelegateMissingTo
 
       include Builders::DataLoader
@@ -34,7 +35,7 @@ module YmlRecord
 
       private
 
-      attr_writer :primary_key
+      attr_writer :primary_key, :abstract_class
 
       def relation_klass
         @relation_klass ||= const_set('Relation', Class.new(Relation))

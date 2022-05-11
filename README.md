@@ -19,17 +19,19 @@ Or install it yourself as:
     $ gem install yml_record
 
 ## Usage
-
-Create an ApplicationYmlRecord model that inherits from YmlRecord::Base
+Create an ApplicationYmlRecord model that inherits from YmlRecord::Base.  
+N.B: setting `abstract_class = true` avoids having to set a yml file for `ApplicationYmlRecord`.  
 ```
   # app/models/application_yml_record.rb
-  class ApplicationYmlRecord < YmlRecord::Base; end
+  class ApplicationYmlRecord < YmlRecord::Base
+    self.abstract_class = true
+  end
 ```
 
 Create a model that will be backed by a yml data file and inherit from ApplicationYmlRecord.
 ```
   # app/models/example_model.rb
-  class ExampleModel < ApplicationYmlRecord
+  class ExampleModel < ApplicationYmlRecord; end
 ```
 
 Add a yml file (named the same as your model) to the `config/data/` folder
@@ -66,7 +68,7 @@ This automatic functionality can be overwritten when needed
     self.filepath = 'another/folder'
   end
 ```
-will look for data in `another/folder/bar/yml`
+will look for data in `another/folder/bar.yml`
 
 See below for specific functionality implementations.
 The implementation examples assume the following setup

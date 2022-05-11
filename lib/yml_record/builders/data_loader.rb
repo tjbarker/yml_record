@@ -4,7 +4,7 @@ module YmlRecord
       protected
 
       def data
-        @data ||= YAML.load_file(filepath)
+        @data ||= abstract_class ? [] : YAML.load_file(filepath)
       end
 
       private
