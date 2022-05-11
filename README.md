@@ -68,7 +68,7 @@ This automatic functionality can be overwritten when needed
     self.filepath = 'another/folder'
   end
 ```
-will look for data in `another/folder/bar/yml`
+will look for data in `another/folder/bar.yml`
 
 See below for specific functionality implementations.
 The implementation examples assume the following setup
