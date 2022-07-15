@@ -13,7 +13,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
   spec.metadata["source_code_uri"] = "https://github.com/tjbarker/yml_record#readme"
 
-  # TODO: do later cause I CBF now
   # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   # spec.metadata["homepage_uri"] = spec.homepage

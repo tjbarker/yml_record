@@ -226,3 +226,75 @@ RSpec.describe 'yaml model memory usage', type: :model do
   end
 end
 
+RSpec.describe 'relationships' do
+  describe 'belongs_to' do
+    class Child
+      def initialize(yml_example_id)
+        self.yml_example_id = yml_example_id
+        self.foobar_id = yml_example_id
+      end
+
+      attr_accessor :yml_example_id, :foobar_id
+
+      YmlRecord.relationships.belongs_to self, :yml_example
+      YmlRecord.relationships.belongs_to self, :foobar, class_name: 'YmlExample'
+      YmlRecord.relationships.belongs_to self, :skuttlebutt, class_name: 'YmlExample', dynamic: false, foreign_key: :foobar_id
+    end
+
+    context 'with default implementation' do
+      let(:child) { Child.new(yml_example_id) }
+
+      context 'when id not given' do
+        let(:yml_example_id) { nil }
+
+        it 'assigns a relationship' do
+          expect(child.yml_example).to eq nil
+        end
+      end
+
+      context 'when id given' do
+        let(:yml_example_id) { YmlExample.first.id }
+
+        it 'assigns a relationship' do
+          expect(child.yml_example).to eq YmlExample.first
+        end
+      end
+
+      context 'when setting attribute' do
+        let(:yml_example_id) { nil }
+        let(:yml_example) { YmlExample.first }
+
+        it 'it assigns via primary key' do
+          expect(child.yml_example).to eq nil
+          child.yml_example = yml_example
+          expect(child.yml_example).to eq yml_example
+        end
+      end
+    end
+
+    context 'when setting class' do
+      let(:child) { Child.new(foobar_id) }
+
+      context 'when id given' do
+        let(:foobar_id) { YmlExample.first.id }
+
+        it 'assigns a relationship' do
+          expect(child.foobar).to eq YmlExample.first
+        end
+      end
+    end
+
+    context 'when static class' do
+      let(:child) { Child.new(skuttlebutt_id) }
+
+      context 'when id given' do
+        let(:skuttlebutt_id) { YmlExample.first.id }
+
+        it 'assigns a relationship and does not define setter' do
+          expect(child.skuttlebutt).to eq YmlExample.first
+          expect(child).to_not respond_to :skuttlebutt=
+        end
+      end
+    end
+  end
+end
