@@ -4,7 +4,7 @@ module YmlRecord
       protected
 
       def data
-        @data ||= YAML.load_file(filepath)
+        @data ||= YAML.load_file(filelocation)
       end
 
       private
