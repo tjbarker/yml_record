@@ -1,5 +1,5 @@
 require 'yaml'
-require 'yml_record/helpers/delegate_missing_to.rb'
+require 'active_support/core_ext/module/delegation.rb'
 require 'yml_record/relation.rb'
 require 'yml_record/attributes.rb'
 require 'yml_record/builders/enum.rb'
@@ -10,13 +10,9 @@ require 'yml_record/builders/has_attributes.rb'
 
 module YmlRecord
   class Base
-    extend DelegateMissingTo
-
     include Builders::HasAttributes
 
     class << self
-      extend DelegateMissingTo
-
       include Builders::DataLoader
       include Builders::All # Includes a delegate_missing_to_all
       include Builders::Enum
@@ -24,6 +20,11 @@ module YmlRecord
 
       def primary_key
         @primary_key ||= 'id'
+      end
+
+      def reset_data
+        @data = nil
+        data
       end
 
       protected

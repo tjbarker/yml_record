@@ -1,5 +1,5 @@
 class YmlExample < YmlRecord::Base
-  self.filepath = 'spec/data/yml_example.yml'
+  self.filepath = 'spec/data'
 
   enum :job
   enum :name, singular: true
@@ -9,7 +9,7 @@ class YmlExample < YmlRecord::Base
 end
 
 class OtherYmlExample < YmlRecord::Base
-  self.filepath = 'spec/data/other_yml_example.yml'
+  self.filepath = 'spec/data'
 end
 
 RSpec.describe YmlExample, type: :model do
@@ -200,27 +200,58 @@ RSpec.describe YmlExample, type: :model do
 
       it { expect { subject }.to raise_error(NoMethodError) }
     end
+
+    context 'when attribute is boolean' do
+      subject { instance.right_handed? }
+
+      it { is_expected.to eq true }
+    end
+
+    context 'when attirbute is store' do
+      let(:instance) { OtherYmlExample.find_by(key: 1) }
+      subject { instance.store }
+
+      it { is_expected.to eq 'Woolworths' }
+    end
   end
 end
 
 RSpec.describe 'yaml model memory usage', type: :model do
+  before do
+    # needed to clear out instance vairables set in other tests
+    # needs to ensure all is set, and then clear it.
+    # so data usage can be tracked
+    YmlExample.all
+    OtherYmlExample.all
+    YmlExample.remove_instance_variable(:@all)
+    YmlExample.remove_instance_variable(:@data)
+    OtherYmlExample.remove_instance_variable(:@all)
+    OtherYmlExample.remove_instance_variable(:@data)
+  end
+
   describe 'all' do
     it 'only parses from each yaml file once' do
-
-      # needed to clear out instance vairables set in other tests
-      # needs to ensure all is set, and then clear it.
-      # so data usage can be tracked
-      YmlExample.all
-      OtherYmlExample.all
-      YmlExample.remove_instance_variable(:@all)
-      OtherYmlExample.remove_instance_variable(:@all)
-
-      expect(YmlExample).to receive(:data).once.and_call_original
-      expect(OtherYmlExample).to receive(:data).once.and_call_original
+      expect(YAML).to receive(:load_file).with(YmlExample.send(:filelocation)).once.and_call_original
+      expect(YAML).to receive(:load_file).with(OtherYmlExample.send(:filelocation)).once.and_call_original
 
       expect(YmlExample.all.count).to eq 6
       expect(YmlExample.all.count).to eq 6
       expect(OtherYmlExample.all.count).to eq 2
+      expect(OtherYmlExample.all.count).to eq 2
+    end
+  end
+
+  describe 'reset_data' do
+    it 'reloads data for class from yml' do
+      expect(YAML).to receive(:load_file).with(YmlExample.send(:filelocation)).twice.and_call_original
+      expect(YAML).to receive(:load_file).with(OtherYmlExample.send(:filelocation)).twice.and_call_original
+
+      expect(YmlExample.all.count).to eq 6
+      YmlExample.reset_data
+      expect(YmlExample.all.count).to eq 6
+
+      expect(OtherYmlExample.all.count).to eq 2
+      OtherYmlExample.reset_data
       expect(OtherYmlExample.all.count).to eq 2
     end
   end

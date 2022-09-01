@@ -31,7 +31,7 @@ module YmlRecord
           end
 
           define_singleton_method value do
-            send(singular ? :find_by : :where, key => value)
+            send(singular ? :find_by : :where, key.to_sym => value)
           end
         end
       end
