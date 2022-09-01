@@ -21,7 +21,7 @@ module YmlRecord
         foreign_key = options.fetch(:foreign_key, "#{name}_#{klass_primary_key}")
 
         model.define_method name do
-          klass.find_by(klass_primary_key => send(foreign_key))
+          klass.find_by(klass_primary_key.to_sym => send(foreign_key))
         end
 
         if dynamic

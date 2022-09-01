@@ -1,16 +1,15 @@
-require 'yml_record/helpers/delegate_missing_to.rb'
-
 module YmlRecord
   class Relation
-    extend DelegateMissingTo
     delegate_missing_to :list
 
     def initialize(list)
       @list = list
     end
 
-    def where(**opts)
-      self.class.new(opts.inject(list) do |list, (key, values)|
+    # weird requirement for different ruby versions to handle where(a: b)
+    def where(optional = {}, **opts)
+      raise ArgumentError unless optional.is_a?(Hash)
+      self.class.new(optional.merge(opts).inject(list) do |list, (key, values)|
         list.select do |inst|
           value_list = values.nil? ? [nil] : Array(values)
           value_list.include?(inst.send(key))
@@ -18,8 +17,8 @@ module YmlRecord
       end)
     end
 
-    def find_by(**opts)
-      where(**opts).first
+    def find_by(optional = {}, **opts)
+      where(**optional.merge(opts)).first
     end
 
     def order(*keys, **keys_with_direction)
